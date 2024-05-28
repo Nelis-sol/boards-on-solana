@@ -4,13 +4,13 @@ use crate::state::Board;
 
 #[derive(Accounts)]
 #[instruction(seed: u64)]
-pub struct UpdateBoard<'info> {
+pub struct MoveCardToList<'info> {
     #[account(mut)]
     pub payer: Signer<'info>,
     #[account(
         mut,
         seeds = [b"board", seed.to_le_bytes().as_ref()],
-        realloc = std::mem::size_of::<Board>()+5,
+        realloc = std::mem::size_of::<Board>()+7,
         realloc::payer = payer,
         realloc::zero = false,
         bump,
@@ -21,8 +21,20 @@ pub struct UpdateBoard<'info> {
 }
 
 
+impl<'info> MoveCardToList<'info> {
 
-impl<'info> UpdateBoard<'info> {
+    pub fn move_card_to_list(
+        &mut self,
+        card_id: u8,
+        list_id: u8,
+        bumps: &MoveCardToListBumps
+    ) -> Result<()> {
 
+        self.board.move_card_to_list(
+            card_id,
+            list_id
+        )
+
+    }
 
 }

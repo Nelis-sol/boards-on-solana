@@ -7,6 +7,12 @@ skip-lint = false
 [programs.localnet]
 boards_on_solana = "7Yq2LTPkk2ZidFkZ8gX9Nv56nGUQC7TmkHYk59pXAS7q"
 
+[programs.devnet]
+boards_on_solana = "7Yq2LTPkk2ZidFkZ8gX9Nv56nGUQC7TmkHYk59pXAS7q"
+
+[programs.mainnet]
+boards_on_solana = "7Yq2LTPkk2ZidFkZ8gX9Nv56nGUQC7TmkHYk59pXAS7q"
+
 [registry]
 url = "https://api.apr.dev"
 

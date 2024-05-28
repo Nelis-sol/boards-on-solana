@@ -4,7 +4,7 @@ use crate::state::Board;
 
 #[derive(Accounts)]
 #[instruction(seed: u64)]
-pub struct UpdateBoard<'info> {
+pub struct CreateList<'info> {
     #[account(mut)]
     pub payer: Signer<'info>,
     #[account(
@@ -20,9 +20,20 @@ pub struct UpdateBoard<'info> {
     pub system_program: Program<'info, System>,
 }
 
+impl<'info> CreateList<'info> {
 
+    pub fn add_list_to_board(
+        &mut self, 
+        list_name: String,
+        bounty_payout_percentage: u8,
+        bumps: &CreateListBumps
+    ) -> Result<()> {
 
-impl<'info> UpdateBoard<'info> {
-
+        self.board.add_list_to_board(
+            list_name,
+            bounty_payout_percentage,
+        )
+        
+    }
 
 }

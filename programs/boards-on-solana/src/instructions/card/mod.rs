@@ -4,5 +4,5 @@ pub use create::*;
 pub mod update;
 pub use update::*;
 
-pub mod delete;
-pub use delete::*;
+pub mod move_card;
+pub use move_card::*;

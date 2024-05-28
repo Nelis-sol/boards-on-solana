@@ -1,15 +1,17 @@
 use anchor_lang::prelude::*;
+use anchor_lang::solana_program::log::sol_log_data;
 use std::str::FromStr;
 
 use crate::constants::*;
+use crate::state::{Card, List};
 
 #[account]
 pub struct Board {
     pub seed: u64, // 8 byte
     pub url: String, // 4 + length of string in bytes
     pub members: Vec<(Pubkey, u8)>, // 4 + (32 pubkey + 1 role indicator) * number of members
-    pub lists: Vec<(u8, String)>, // 4 + (1 list index + 4+ list name) * number of lists
-    pub cards: Vec<(u8, u64)>, // 4 + (1 list index + bounty) * number of cards
+    pub lists: Vec<List>, // 4 + (1 list index + 4+ list name) * number of lists
+    pub cards: Vec<Card>, // 4 + (1 list index + bounty) * number of cards
     pub currency: Pubkey, // 32 bytes
     pub bump: u8, // 1 byte
 }
@@ -42,15 +44,18 @@ impl Board {
             self.members.push((authority, 1));
 
             // start with default list with id 1 and is called "Todo"
-            self.lists.push((1, String::from("Todo")));
+            self.lists.push(List::new_default());
 
             // start with default card attached to list 1 and 0 bounty
-            self.cards.push((1, 0));
+            self.cards.push(Card::new_default());
 
             // take USDC as default currency
             self.currency = Pubkey::from_str(DEFAULT_BOUNTY_CURRENCY).unwrap();
 
             self.bump = bump;
+
+            msg!("Board: {} - url: {} - members: {:#?} - lists: {:#?} - cards: {:#?} - currency: {}",
+                    self.seed, self.url, self.members, self.lists, self.cards, self.currency);
 
             Ok(())
     }
@@ -59,12 +64,19 @@ impl Board {
     pub fn add_list_to_board(
         &mut self,
         list_name: String,
+        bounty_payout_percentage: u8,
     ) -> Result<()> {
 
-        let index: u8 = self.lists.len().try_into().unwrap();
-        self.lists.push((index, list_name));
+        // TODO: come up with a better way for list_id's
+        let list_id: u8 = self.lists.len().try_into().unwrap();
 
-        msg!("Lists: {:?}", self.lists);
+        // Create new list item
+        let list = List::new(list_id, list_name, bounty_payout_percentage);
+
+        // Add list to board
+        self.lists.push(list);
+
+        msg!("Lists: {:#?}", self.lists);
 
         Ok(())
     }
@@ -72,15 +84,48 @@ impl Board {
 
     pub fn add_card_to_board(
         &mut self,
-        list_index: u8,
+        list_id: u8,
         bounty: u64,
     ) -> Result<()> {
 
-        self.cards.push((list_index, bounty));
+        // TODO: come up with a better way for card_id's
+        let card_id: u8 = self.cards.len().try_into().unwrap();
 
-        msg!("Cards: {:?}", self.cards);
+        // Create new card item
+        let card = Card::new(card_id, list_id, bounty);
+
+        // Add card to the board
+        self.cards.push(card);
+
+        msg!("Cards: {:#?}", self.cards);
 
         Ok(())
+    }
+
+
+    pub fn move_card_to_list(
+        &mut self,
+        card_id: u8,
+        list_id: u8,
+    ) -> Result<()> {
+
+        let card = self.find_card_by_id(card_id).expect("card id not found in card vector");
+        
+        card.move_card(list_id);
+
+        msg!("Cards: {:#?}", self.cards);
+
+        Ok(())
+    }
+
+
+    pub fn find_card_by_id(
+        &mut self, 
+        card_id: u8
+    ) -> Option<&mut Card> {
+
+        self.cards.iter_mut().find(|card| card.card_id == card_id)
+
     }
 
 }
