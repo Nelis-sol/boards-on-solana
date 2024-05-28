@@ -17,7 +17,7 @@ boards_on_solana = "7Yq2LTPkk2ZidFkZ8gX9Nv56nGUQC7TmkHYk59pXAS7q"
 url = "https://api.apr.dev"
 
 [provider]
-cluster = "Localnet"
+cluster = "devnet"
 wallet = "~/.config/solana/id.json"
 
 [scripts]
