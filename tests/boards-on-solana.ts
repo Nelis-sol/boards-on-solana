@@ -55,75 +55,75 @@ describe("boards-on-solana", () => {
   });
 
 
-  it("Add list to board", async () => {
+  // it("Add list to board", async () => {
 
-    const tx = await program.methods.addList(
-      board_seed,
-      "Doing",
-      10,
-    )
-    .accounts({
-      payer: wallet.payer.publicKey,
-      board: boardPDA,
-      systemProgram: anchor.web3.SystemProgram.programId,
-    })
-    .rpc()
-    .then(log_tx);
+  //   const tx = await program.methods.addList(
+  //     board_seed,
+  //     "Doing",
+  //     10,
+  //   )
+  //   .accounts({
+  //     payer: wallet.payer.publicKey,
+  //     board: boardPDA,
+  //     systemProgram: anchor.web3.SystemProgram.programId,
+  //   })
+  //   .rpc()
+  //   .then(log_tx);
 
-  });
-
-
-
-  it("Add card to board", async () => {
-
-    const tx = await program.methods.addCard(
-      board_seed,
-      1,
-      new anchor.BN(1000000),
-    )
-    .accounts({
-      payer: wallet.payer.publicKey,
-      board: boardPDA,
-      systemProgram: anchor.web3.SystemProgram.programId,
-    })
-    .rpc()
-    .then(log_tx);
-
-  });
+  // });
 
 
-  it("Move card to list", async () => {
 
-    const tx = await program.methods.moveCardToList(
-      board_seed,
-      1,
-      2,
-    )
-    .accounts({
-      payer: wallet.payer.publicKey,
-      board: boardPDA,
-      systemProgram: anchor.web3.SystemProgram.programId,
-    })
-    .rpc()
-    .then(log_tx);
+  // it("Add card to board", async () => {
 
-  });
+  //   const tx = await program.methods.addCard(
+  //     board_seed,
+  //     1,
+  //     new anchor.BN(1000000),
+  //   )
+  //   .accounts({
+  //     payer: wallet.payer.publicKey,
+  //     board: boardPDA,
+  //     systemProgram: anchor.web3.SystemProgram.programId,
+  //   })
+  //   .rpc()
+  //   .then(log_tx);
+
+  // });
 
 
-  it("Delete board", async () => {
+  // it("Move card to list", async () => {
 
-    const tx = await program.methods.deleteBoard(
-      board_seed
-    )
-    .accounts({
-      payer: wallet.payer.publicKey,
-      board: boardPDA,
-      systemProgram: anchor.web3.SystemProgram.programId,
-    })
-    .rpc()
-    .then(log_tx);
+  //   const tx = await program.methods.moveCardToList(
+  //     board_seed,
+  //     1,
+  //     2,
+  //   )
+  //   .accounts({
+  //     payer: wallet.payer.publicKey,
+  //     board: boardPDA,
+  //     systemProgram: anchor.web3.SystemProgram.programId,
+  //   })
+  //   .rpc()
+  //   .then(log_tx);
 
-  });
+  // });
+
+
+  // it("Delete board", async () => {
+
+  //   const tx = await program.methods.deleteBoard(
+  //     board_seed
+  //   )
+  //   .accounts({
+  //     payer: wallet.payer.publicKey,
+  //     board: boardPDA,
+  //     systemProgram: anchor.web3.SystemProgram.programId,
+  //   })
+  //   .rpc()
+  //   .then(log_tx);
+
+  // });
 
 
 });

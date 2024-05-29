@@ -1,11 +1,14 @@
 use anchor_lang::prelude::*;
 use anchor_lang::solana_program::log::sol_log_data;
+use serde::{Serialize, Deserialize};
 use std::str::FromStr;
+use serde_json::json;
 
 use crate::constants::*;
 use crate::state::{Card, List};
 
 #[account]
+#[derive(Debug, Serialize, Deserialize)]
 pub struct Board {
     pub seed: u64, // 8 byte
     pub url: String, // 4 + length of string in bytes
@@ -54,8 +57,11 @@ impl Board {
 
             self.bump = bump;
 
-            msg!("Board: {} - url: {} - members: {:#?} - lists: {:#?} - cards: {:#?} - currency: {}",
-                    self.seed, self.url, self.members, self.lists, self.cards, self.currency);
+
+            let pretty_json = serde_json::to_string_pretty(&self).unwrap();
+
+            // sol_log_data(&[pretty_json.as_bytes()]);
+            msg!("Board: {}", pretty_json);
 
             Ok(())
     }
